@@ -783,7 +783,7 @@
     <a href="https://github.com/angeljcarrillo" target="_blank" class="sidebar-link" title="GitHub">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
     </a>
-    <a href="mailto:angeljcarrillo@gmail.com" class="sidebar-link" title="Email">✉</a>
+    <a href="/cdn-cgi/l/email-protection#adccc3cac8c1c7ceccdfdfc4c1c1c2edcac0ccc4c183cec2c0" class="sidebar-link" title="Email">✉</a>
   </div>
 </nav>
 
@@ -821,7 +821,7 @@
     </div>
 
     <div class="hero-cta">
-      <a href="mailto:angeljcarrillo@gmail.com" class="btn btn-primary">✉ Get in Touch</a>
+      <a href="/cdn-cgi/l/email-protection#30515e57555c5a53514242595c5c5f70575d51595c1e535f5d" class="btn btn-primary">✉ Get in Touch</a>
       <a href="https://linkedin.com/in/angel-javier-carrillo-bermejo-71166795" target="_blank" class="btn btn-secondary">↗ LinkedIn</a>
       <a href="https://github.com/angeljcarrillo" target="_blank" class="btn btn-secondary">⌥ GitHub</a>
     </div>
@@ -861,7 +861,7 @@
           </div>
           <div class="info-item">
             <span class="info-label">Email</span>
-            <span class="info-value"><a href="mailto:angeljcarrillo@gmail.com">angeljcarrillo@gmail.com</a></span>
+            <span class="info-value"><a href="/cdn-cgi/l/email-protection#16777871737a7c757764647f7a7a7956717b777f7a3875797b"><span class="__cf_email__" data-cfemail="e1808f86848d8b82809393888d8d8ea1868c80888dcf828e8c">[email&#160;protected]</span></a></span>
           </div>
           <div class="info-item">
             <span class="info-label">Phone</span>
@@ -1193,7 +1193,7 @@
         <h3 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700">Let's connect</h3>
         <p>Open to ML engineering roles focused on LLM systems, audio AI, or production deep learning. Feel free to reach out — I'm always happy to chat about interesting problems.</p>
         <div class="contact-links">
-          <a href="mailto:angeljcarrillo@gmail.com" class="contact-link">✉ angeljcarrillo@gmail.com</a>
+          <a href="/cdn-cgi/l/email-protection#9afbf4fdfff6f0f9fbe8e8f3f6f6f5dafdf7fbf3f6b4f9f5f7" class="contact-link">✉ <span class="__cf_email__" data-cfemail="65040b0200090f060417170c09090a250208040c094b060a08">[email&#160;protected]</span></a>
           <a href="tel:+16173970686" class="contact-link">📱 +1 617 397 0686</a>
         </div>
       </div>
@@ -1246,14 +1246,14 @@
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ══════════════════════════════════════════════════
 //  ⚠️  SETUP: Paste your FREE Google Gemini API key
 //  1. Go to → https://aistudio.google.com
 //  2. Click "Get API Key" → "Create API Key" → Copy
 //  3. Paste below. 100% FREE, no credit card needed!
 // ══════════════════════════════════════════════════
-const GEMINI_API_KEY = "AIzaSyAhsCCL8Rvk3UNUSoyyWaVssGT0BQrT0Sc";
+const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
 
 const SYSTEM_PROMPT = `You are the AI career assistant for Angel Javier Carrillo Bermejo, embedded on his personal portfolio website. Your job is to help recruiters and hiring managers learn about Angel's background, skills, and experience in a clear, enthusiastic, and professional way.
 
@@ -1351,7 +1351,7 @@ async function sendMessage() {
     }));
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1437,21 +1437,4 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('section').forEach(s => observer.observe(s));
 
 // ── Active nav highlight ──
-const navLinks = document.querySelectorAll('.sidebar-nav a');
-const sections = document.querySelectorAll('section[id]');
-
-const navObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      navLinks.forEach(a => a.classList.remove('active'));
-      const active = document.querySelector(`.sidebar-nav a[href="#${e.target.id}"]`);
-      if (active) active.classList.add('active');
-    }
-  });
-}, { threshold: 0.3 });
-
-sections.forEach(s => navObserver.observe(s));
-</script>
-
-</body>
-</html>
+const navLinks = document.querySelectorAll('.sideb
