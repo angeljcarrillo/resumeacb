@@ -544,9 +544,10 @@
     border: none; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 8px 32px rgba(79,142,247,0.35);
-    z-index: 1000;
+    z-index: 9999;
     transition: all 0.2s;
     font-size: 22px;
+    -webkit-appearance: none;
   }
   #chat-btn:hover { transform: scale(1.08); box-shadow: 0 12px 40px rgba(79,142,247,0.45); }
 
@@ -559,6 +560,7 @@
     font-size: 9px; color: white;
     font-family: 'DM Mono', monospace; font-weight: 500;
     animation: pulse 2s infinite;
+    pointer-events: none;
   }
 
   #chat-window {
@@ -568,7 +570,7 @@
     border: 1px solid var(--border2);
     border-radius: 16px;
     display: flex; flex-direction: column;
-    z-index: 999;
+    z-index: 9998;
     box-shadow: 0 24px 64px rgba(0,0,0,0.5);
     transform: scale(0.9) translateY(20px);
     opacity: 0;
