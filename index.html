@@ -1248,11 +1248,12 @@
 
 <script>
 // ══════════════════════════════════════════════════
-//  ⚠️  SETUP: Replace with your Anthropic API key
-//  Get yours FREE at: https://console.anthropic.com
-//  Tip: Set a monthly spending limit for safety!
+//  ⚠️  SETUP: Paste your FREE Google Gemini API key
+//  1. Go to → https://aistudio.google.com
+//  2. Click "Get API Key" → "Create API Key" → Copy
+//  3. Paste below. 100% FREE, no credit card needed!
 // ══════════════════════════════════════════════════
-const ANTHROPIC_API_KEY = "YOUR_ANTHROPIC_API_KEY_HERE";
+const GEMINI_API_KEY = "AIzaSyAhsCCL8Rvk3UNUSoyyWaVssGT0BQrT0Sc";
 
 const SYSTEM_PROMPT = `You are the AI career assistant for Angel Javier Carrillo Bermejo, embedded on his personal portfolio website. Your job is to help recruiters and hiring managers learn about Angel's background, skills, and experience in a clear, enthusiastic, and professional way.
 
@@ -1325,8 +1326,8 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
-  if (ANTHROPIC_API_KEY === "YOUR_ANTHROPIC_API_KEY_HERE") {
-    addMessage("assistant", "⚠️ To enable this chat, the site owner needs to add an Anthropic API key. Please contact Angel directly at angeljcarrillo@gmail.com!");
+  if (GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
+    addMessage("assistant", "⚠️ To enable this chat, please add a Gemini API key. Get one FREE at aistudio.google.com — or contact Angel directly at angeljcarrillo@gmail.com!");
     return;
   }
 
@@ -1343,26 +1344,33 @@ async function sendMessage() {
   messages.push({ role: "user", content: text });
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true"
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 500,
-        system: SYSTEM_PROMPT,
-        messages: messages
-      })
-    });
+    // Build conversation history for Gemini format
+    const geminiHistory = messages.slice(0, -1).map(m => ({
+      role: m.role === "assistant" ? "model" : "user",
+      parts: [{ text: m.content }]
+    }));
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [
+            ...geminiHistory,
+            { role: "user", parts: [{ text: text }] }
+          ],
+          generationConfig: { maxOutputTokens: 500, temperature: 0.7 }
+        })
+      }
+    );
 
     const data = await res.json();
     removeTyping(typingId);
 
-    const reply = data.content?.[0]?.text || "Sorry, I had trouble responding. Please try again or contact Angel directly.";
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
+      || "Sorry, I had trouble responding. Please try again or contact Angel directly.";
     messages.push({ role: "assistant", content: reply });
     addMessage("assistant", reply);
   } catch (err) {
