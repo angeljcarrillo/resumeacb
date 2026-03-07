@@ -1250,13 +1250,181 @@
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// SETUP: Replace with your Gemini API key
+// Get it FREE at: https://aistudio.google.com -> Get API Key
+var GEMINI_API_KEY = "AIzaSyAhsCCL8Rvk3UNUSoyyWaVssGT0BQrT0Sc";
+
+var SYSTEM_PROMPT = "You are the AI career assistant for Angel Javier Carrillo Bermejo, embedded on his personal portfolio website. Help recruiters and hiring managers learn about Angel. Be professional, warm, and concise (2-3 paragraphs max). Refer to Angel in third person. If asked something not covered, suggest emailing angeljcarrillo@gmail.com.\n\nABOUT: Machine Learning Engineer with 5+ years production experience in LLM inference, audio AI, NLP. TN visa (valid), based in the US, open to new opportunities. Contact: angeljcarrillo@gmail.com | +1 617 397 0686\n\nCURRENT: Modulate (2022-Present) - ML Engineer LLM Inference & Audio AI. Engineered LLM quantization for LLaMA (INT4/INT8/FP16) with GPTQ/bitsandbytes, reducing latency 40%. Built RAG systems with vector databases. Integrated NVIDIA Parakeet STT. Deployed deepfake detection 90%+ accuracy using AST and XLS-R-SLS on AWS EC2. Scaled toxicity classifiers to 90% precision, reducing false positives 40%.\n\nPREVIOUS: Apziva (2022) - transformer sentiment classifier 86% F1. UNAM (2018-2022) - AI Researcher, CNN/VAE MRI classification 78% to 91%, 7 papers, GCP. Texas A&M (2014) - UAV pedestrian detection 84% recall.\n\nEDUCATION: PhD CS (coursework completed) GPA 4.0 UNAM. MSc CS GPA 4.0 UADY. BSc Mechatronics GPA 3.5 Universidad Modelo.\n\nSKILLS: LLaMA, GPTQ, RAG, LangChain, vLLM, PyTorch, TensorFlow, HuggingFace, Scikit-learn, TorchAudio, AWS, Docker, GCP, Python, SQL.\n\nPUBLICATIONS: 7 papers including Medical Oncology 2024, JVCIR 2019, Computational Methods in Medicine 2020, and more.";
+
+var messages = [];
+var chatOpen = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  var win = document.getElementById("chat-window");
+  if (chatOpen) {
+    win.classList.add("open");
+    setTimeout(function() {
+      var inp = document.getElementById("chat-input");
+      if (inp) inp.focus();
+    }, 300);
+  } else {
+    win.classList.remove("open");
+  }
+}
+
+function addMessage(role, text) {
+  var container = document.getElementById("chat-messages");
+  var div = document.createElement("div");
+  div.className = "msg " + role;
+  var avatar = role === "assistant" ? "🤖" : "👤";
+  div.innerHTML = "<div class=\"msg-avatar\">" + avatar + "</div><div class=\"msg-bubble\">" + text.replace(/\n/g, "<br>") + "</div>";
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function addTyping() {
+  var container = document.getElementById("chat-messages");
+  var id = "typing-" + Date.now();
+  var div = document.createElement("div");
+  div.className = "msg assistant";
+  div.id = id;
+  div.innerHTML = "<div class=\"msg-avatar\">🤖</div><div class=\"msg-bubble\"><div class=\"typing-dots\"><span></span><span></span><span></span></div></div>";
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  var el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function sendSuggestion(el) {
+  document.getElementById("chat-input").value = el.textContent;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 100) + "px";
+}
+
+async function sendMessage() {
+  var input = document.getElementById("chat-input");
+  var text = input.value.trim();
+  if (!text) return;
+
+  if (GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
+    addMessage("assistant", "To enable this chat, add a Gemini API key. Get one FREE at aistudio.google.com or contact Angel at angeljcarrillo@gmail.com");
+    return;
+  }
+
+  input.value = "";
+  input.style.height = "auto";
+  document.getElementById("chat-suggestions").style.display = "none";
+  addMessage("user", text);
+
+  var sendBtn = document.getElementById("chat-send");
+  sendBtn.disabled = true;
+
+  var typingId = addTyping();
+  messages.push({ role: "user", content: text });
+
+  try {
+    var geminiMessages = messages.map(function(m) {
+      return { role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] };
+    });
+
+    var res = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: geminiMessages,
+          generationConfig: { maxOutputTokens: 500, temperature: 0.7 }
+        })
+      }
+    );
+
+    var data = await res.json();
+    removeTyping(typingId);
+
+    var reply = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text)
+      ? data.candidates[0].content.parts[0].text
+      : "Sorry, I had trouble responding. Please contact Angel at angeljcarrillo@gmail.com";
+
+    messages.push({ role: "assistant", content: reply });
+    addMessage("assistant", reply);
+  } catch (err) {
+    removeTyping(typingId);
+    addMessage("assistant", "Something went wrong. Please contact Angel at angeljcarrillo@gmail.com");
+    console.error(err);
+  }
+
+  sendBtn.disabled = false;
+}
+
+// Wire up button with addEventListener as backup
+document.addEventListener("DOMContentLoaded", function() {
+  var btn = document.getElementById("chat-btn");
+  if (btn) btn.addEventListener("click", toggleChat);
+
+  var closeBtn = document.querySelector(".chat-close");
+  if (closeBtn) closeBtn.addEventListener("click", toggleChat);
+
+  var sendBtn = document.getElementById("chat-send");
+  if (sendBtn) sendBtn.addEventListener("click", sendMessage);
+});
+
+// Scroll animations
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll("section").forEach(function(s) {
+    if (s.id !== "hero") s.classList.add("animate");
+  });
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) e.target.classList.add("visible");
+    });
+  }, { threshold: 0.05, rootMargin: "0px 0px -40px 0px" });
+
+  document.querySelectorAll("section").forEach(function(s) { observer.observe(s); });
+
+  // Active nav highlight
+  var navLinks = document.querySelectorAll(".sidebar-nav a");
+  var sections = document.querySelectorAll("section[id]");
+
+  var navObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        navLinks.forEach(function(a) { a.classList.remove("active"); });
+        var active = document.querySelector(".sidebar-nav a[href=\"#" + e.target.id + "\"]");
+        if (active) active.classList.add("active");
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(function(s) { navObserver.observe(s); });
+});
+</script><script>
 // ══════════════════════════════════════════════════
 //  ⚠️  SETUP: Paste your FREE Google Gemini API key
 //  1. Go to → https://aistudio.google.com
 //  2. Click "Get API Key" → "Create API Key" → Copy
 //  3. Paste below. 100% FREE, no credit card needed!
 // ══════════════════════════════════════════════════
-const GEMINI_API_KEY = "AIzaSyAhsCCL8Rvk3UNUSoyyWaVssGT0BQrT0Sc";
+const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
 
 const SYSTEM_PROMPT = `You are the AI career assistant for Angel Javier Carrillo Bermejo, embedded on his personal portfolio website. Your job is to help recruiters and hiring managers learn about Angel's background, skills, and experience in a clear, enthusiastic, and professional way.
 
