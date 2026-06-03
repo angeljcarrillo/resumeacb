@@ -351,7 +351,7 @@
           <li>Fine-tuned and productionized Parakeet TDT v2 (English) and v3 (multilingual, 25 languages), replacing legacy Whisper and reducing transcription costs by ~$38K/year on-demand.</li>
           <li>Engineered LLM quantization pipelines for LLaMA (INT4/INT8/FP16) using GPTQ and bitsandbytes, reducing inference latency by up to <strong>40%</strong> for real-time audio moderation workloads.</li>
           <li>Designed end-to-end LLM inference pipelines with prompt assembly, template management, and request routing across 10+ production use cases with Cohere and LLaMA-family models.</li>
-          <li>Built RAG systems (VELMA) integrating vector databases with LLM backends for context-aware content moderation and policy Q&amp;A workflows.</li>
+          <li>Built RAG systems integrating vector databases with LLM backends for context-aware content moderation and policy Q&amp;A workflows.</li>
           <li>Deployed deepfake detection systems at 90%+ accuracy using AST and XLS-R-SLS; optimized EC2 pipelines for real-time audio at scale.</li>
           <li>Scaled real-time toxicity classifiers to 90% precision, reducing false positives by 40% across multilingual voice platforms processing tens of millions of clips daily.</li>
           <li>Led 710 GB / 3B-row database schema migration expanding multilingual support from 19 to 34 languages — zero-downtime delivery using shadow-table pattern.</li>
@@ -644,7 +644,7 @@ var SYSTEM_PROMPT = [
   "- 30% speed improvement on NVIDIA Canary 1B (quantization, batching, kernel tuning)",
   "- Fine-tuned Parakeet TDT v2 (English) and v3 (25 languages) — replaced Whisper, ~$38K/year savings",
   "- LLM quantization (LLaMA INT4/INT8 GPTQ, bitsandbytes) → 40% latency reduction",
-  "- RAG system (VELMA) with vector DBs for content moderation and policy Q&A",
+  "- RAG system with vector DBs for content moderation and policy Q&A",
   "- Deepfake detection at 90%+ accuracy (AST, XLS-R-SLS architectures)",
   "- Toxicity classifiers at 90% precision, -40% false positives",
   "- Cohere and LLaMA pipelines across 10+ production use cases",
